@@ -143,7 +143,7 @@ go run ./pkg/database/script/migration.go ./env/dev/.env.auth && \
 
 ### Generate a Proto File Command
 
-player
+user
 
 ```bash
 protoc --go_out=. --go_opt=paths=source_relative \
