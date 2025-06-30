@@ -195,6 +195,7 @@ MongoDB interactions mocked via interfaces
 ```
 
 - Endpoint: ``` GET /user_v1/user/user:xxxxxxxxxx ```
+
 **StatusOK Response (200)**:
 ``` bash
 {
