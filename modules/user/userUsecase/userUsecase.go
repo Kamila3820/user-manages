@@ -19,6 +19,7 @@ type (
 		FindOneUserProfile(pctx context.Context, userId string) (*user.UserProfile, error)
 		FindOneUserCredential(pctx context.Context, password, email string) (*userPb.UserProfile, error)
 		FindOneUserProfileToRefresh(pctx context.Context, userId string) (*userPb.UserProfile, error)
+		ListAllUsers(ctx context.Context) ([]user.UserProfile, error)
 	}
 
 	userUsecase struct {
@@ -103,4 +104,24 @@ func (u *userUsecase) FindOneUserProfileToRefresh(pctx context.Context, userId s
 		Name:      result.Name,
 		CreatedAt: result.CreatedAt.In(loc).String(),
 	}, nil
+}
+
+func (s *userUsecase) ListAllUsers(ctx context.Context) ([]user.UserProfile, error) {
+	users, err := s.userRepository.FindAllUsers(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	// Convert entities to UserProfile DTO
+	profiles := make([]user.UserProfile, 0, len(users))
+	for _, u := range users {
+		profiles = append(profiles, user.UserProfile{
+			Id:        u.Id.Hex(),
+			Email:     u.Email,
+			Name:      u.Name,
+			CreatedAt: u.CreatedAt,
+		})
+	}
+
+	return profiles, nil
 }

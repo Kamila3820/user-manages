@@ -5,8 +5,7 @@ import (
 	"log"
 	"os"
 	"user-manages/config"
-	"user-manages/pkg/database"
-	"user-manages/server"
+	"user-manages/pkg/database/migration"
 )
 
 func main() {
@@ -20,9 +19,10 @@ func main() {
 		return os.Args[1]
 	}())
 
-	// Database connection
-	db := database.DbConn(ctx, &cfg)
-	defer db.Disconnect(ctx)
-
-	server.Start(ctx, &cfg, db)
+	switch cfg.App.Name {
+	case "user":
+		migration.UserMigrate(ctx, &cfg)
+	case "auth":
+		migration.AuthMigrate(ctx, &cfg)
+	}
 }

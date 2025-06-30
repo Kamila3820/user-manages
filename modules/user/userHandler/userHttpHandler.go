@@ -18,6 +18,7 @@ type (
 	UserHttpHandlerService interface {
 		CreateUser(c echo.Context) error
 		FindOneUserProfile(c echo.Context) error
+		ListUsers(c echo.Context) error
 	}
 
 	userHttpHandler struct {
@@ -59,5 +60,16 @@ func (h *userHttpHandler) FindOneUserProfile(c echo.Context) error {
 		return response.ErrResponse(c, http.StatusBadRequest, err.Error())
 	}
 
-	return response.SuccessResponse(c, http.StatusBadRequest, res)
+	return response.SuccessResponse(c, http.StatusOK, res)
+}
+
+func (h *userHttpHandler) ListUsers(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	users, err := h.userUsecase.ListAllUsers(ctx)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "failed to list users"})
+	}
+
+	return c.JSON(http.StatusOK, users)
 }

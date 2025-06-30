@@ -21,6 +21,7 @@ type (
 		FindOneUserProfile(pctx context.Context, userId string) (*user.UserProfileBson, error)
 		FindOneUserCredential(pctx context.Context, email string) (*user.User, error)
 		FindOneUserProfileToRefresh(pctx context.Context, userId string) (*user.User, error)
+		FindAllUsers(pctx context.Context) ([]user.User, error)
 	}
 
 	userRepository struct {
@@ -47,7 +48,7 @@ func (r *userRepository) IsUniqueUser(pctx context.Context, email, username stri
 	if err := col.FindOne(
 		ctx,
 		bson.M{"$or": []bson.M{
-			{"username": username},
+			{"name": username},
 			{"email": email},
 		}},
 	).Decode(user); err != nil {
@@ -89,7 +90,7 @@ func (r *userRepository) FindOneUserProfile(pctx context.Context, userId string)
 			bson.M{
 				"_id":        1,
 				"email":      1,
-				"username":   1,
+				"name":       1,
 				"created_at": 1,
 				"updated_at": 1,
 			},
@@ -134,4 +135,23 @@ func (r *userRepository) FindOneUserProfileToRefresh(pctx context.Context, userI
 	}
 
 	return result, nil
+}
+
+func (r *userRepository) FindAllUsers(pctx context.Context) ([]user.User, error) {
+	ctx, cancel := context.WithTimeout(pctx, 10*time.Second)
+	defer cancel()
+
+	col := r.userDbConn(ctx).Collection("users")
+	cursor, err := col.Find(ctx, bson.M{})
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
+	var users []user.User
+	if err := cursor.All(ctx, &users); err != nil {
+		return nil, err
+	}
+
+	return users, nil
 }
