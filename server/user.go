@@ -34,5 +34,5 @@ func (s *server) userService() {
 	user.GET("/user/:user_id", httpHandler.FindOneUserProfile)
 	user.GET("/user/list", httpHandler.ListUsers)
 	user.PATCH("/user/:user_id", httpHandler.UpdateUser)
-
+	user.DELETE("/user/:user_id", httpHandler.DeleteUser)
 }

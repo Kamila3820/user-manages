@@ -23,6 +23,7 @@ type (
 		FindOneUserProfileToRefresh(pctx context.Context, userId string) (*user.User, error)
 		FindAllUsers(pctx context.Context) ([]user.User, error)
 		UpdateUser(ctx context.Context, userId string, updateData map[string]interface{}) error
+		DeleteUser(ctx context.Context, userId string) error
 	}
 
 	userRepository struct {
@@ -171,6 +172,25 @@ func (r *userRepository) UpdateUser(ctx context.Context, userId string, updateDa
 		return errors.New("failed to update user")
 	}
 	if result.MatchedCount == 0 {
+		return errors.New("user not found")
+	}
+
+	return nil
+}
+
+func (r *userRepository) DeleteUser(ctx context.Context, userId string) error {
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
+
+	col := r.userDbConn(ctx).Collection("users")
+	filter := bson.M{"_id": utils.ConvertToObjectId(userId)}
+
+	res, err := col.DeleteOne(ctx, filter)
+	if err != nil {
+		log.Printf("Error: DeleteUser: %s", err.Error())
+		return errors.New("failed to delete user")
+	}
+	if res.DeletedCount == 0 {
 		return errors.New("user not found")
 	}
 

@@ -21,6 +21,7 @@ type (
 		FindOneUserProfileToRefresh(pctx context.Context, userId string) (*userPb.UserProfile, error)
 		ListAllUsers(ctx context.Context) ([]user.UserProfile, error)
 		UpdateUser(ctx context.Context, userId string, req *user.UpdateUserReq) error
+		DeleteUser(ctx context.Context, userId string) error
 	}
 
 	userUsecase struct {
@@ -142,4 +143,8 @@ func (s *userUsecase) UpdateUser(ctx context.Context, userId string, req *user.U
 	}
 
 	return s.userRepository.UpdateUser(ctx, userId, updateMap)
+}
+
+func (s *userUsecase) DeleteUser(ctx context.Context, userId string) error {
+	return s.userRepository.DeleteUser(ctx, userId)
 }
