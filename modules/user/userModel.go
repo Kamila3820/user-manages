@@ -22,4 +22,9 @@ type (
 		Password string `json:"password" form:"password" validate:"required,max=32"`
 		Name     string `json:"name" form:"name" validate:"required,max=64"`
 	}
+
+	UpdateUserReq struct {
+		Name  string `json:"name,omitempty" form:"name"`
+		Email string `json:"email,omitempty" form:"email" validate:"omitempty,email,max=255"`
+	}
 )

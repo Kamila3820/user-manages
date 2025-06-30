@@ -19,6 +19,7 @@ type (
 		CreateUser(c echo.Context) error
 		FindOneUserProfile(c echo.Context) error
 		ListUsers(c echo.Context) error
+		UpdateUser(c echo.Context) error
 	}
 
 	userHttpHandler struct {
@@ -72,4 +73,19 @@ func (h *userHttpHandler) ListUsers(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, users)
+}
+
+func (h *userHttpHandler) UpdateUser(c echo.Context) error {
+	userId := strings.TrimPrefix(c.Param("user_id"), "user:")
+
+	req := new(user.UpdateUserReq)
+	if err := c.Bind(req); err != nil {
+		return c.JSON(http.StatusBadRequest, echo.Map{"error": "invalid request"})
+	}
+
+	if err := h.userUsecase.UpdateUser(c.Request().Context(), userId, req); err != nil {
+		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{"message": "user updated successfully"})
 }

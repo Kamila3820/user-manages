@@ -20,6 +20,7 @@ type (
 		FindOneUserCredential(pctx context.Context, password, email string) (*userPb.UserProfile, error)
 		FindOneUserProfileToRefresh(pctx context.Context, userId string) (*userPb.UserProfile, error)
 		ListAllUsers(ctx context.Context) ([]user.UserProfile, error)
+		UpdateUser(ctx context.Context, userId string, req *user.UpdateUserReq) error
 	}
 
 	userUsecase struct {
@@ -124,4 +125,21 @@ func (s *userUsecase) ListAllUsers(ctx context.Context) ([]user.UserProfile, err
 	}
 
 	return profiles, nil
+}
+
+func (s *userUsecase) UpdateUser(ctx context.Context, userId string, req *user.UpdateUserReq) error {
+	updateMap := make(map[string]interface{})
+
+	if req.Name != "" {
+		updateMap["name"] = req.Name
+	}
+	if req.Email != "" {
+		updateMap["email"] = req.Email
+	}
+
+	if len(updateMap) == 0 {
+		return errors.New("no data to update")
+	}
+
+	return s.userRepository.UpdateUser(ctx, userId, updateMap)
 }

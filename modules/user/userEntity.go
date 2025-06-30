@@ -15,11 +15,6 @@ type (
 		CreatedAt time.Time          `json:"created_at" bson:"created_at"`
 	}
 
-	PlayerRole struct {
-		RoleTitle string `json:"role_title" bson:"role_title"`
-		RoleCode  int    `json:"role_code" bson:"role_code"`
-	}
-
 	UserProfileBson struct {
 		Id        primitive.ObjectID `json:"_id" bson:"_id,omitempty"`
 		Email     string             `json:"email" bson:"email"`

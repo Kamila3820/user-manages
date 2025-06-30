@@ -33,4 +33,6 @@ func (s *server) userService() {
 	user.POST("/user/register", httpHandler.CreateUser)
 	user.GET("/user/:user_id", httpHandler.FindOneUserProfile)
 	user.GET("/user/list", httpHandler.ListUsers)
+	user.PATCH("/user/:user_id", httpHandler.UpdateUser)
+
 }

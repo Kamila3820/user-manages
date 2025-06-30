@@ -22,6 +22,7 @@ type (
 		FindOneUserCredential(pctx context.Context, email string) (*user.User, error)
 		FindOneUserProfileToRefresh(pctx context.Context, userId string) (*user.User, error)
 		FindAllUsers(pctx context.Context) ([]user.User, error)
+		UpdateUser(ctx context.Context, userId string, updateData map[string]interface{}) error
 	}
 
 	userRepository struct {
@@ -154,4 +155,24 @@ func (r *userRepository) FindAllUsers(pctx context.Context) ([]user.User, error)
 	}
 
 	return users, nil
+}
+
+func (r *userRepository) UpdateUser(ctx context.Context, userId string, updateData map[string]interface{}) error {
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
+
+	col := r.userDbConn(ctx).Collection("users")
+	filter := bson.M{"_id": utils.ConvertToObjectId(userId)}
+	update := bson.M{"$set": updateData}
+
+	result, err := col.UpdateOne(ctx, filter, update)
+	if err != nil {
+		log.Printf("Error: UpdateUser: %s", err.Error())
+		return errors.New("failed to update user")
+	}
+	if result.MatchedCount == 0 {
+		return errors.New("user not found")
+	}
+
+	return nil
 }
