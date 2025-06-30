@@ -21,6 +21,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
+	UserGrpcService_GetUserProfile_FullMethodName              = "/UserGrpcService/GetUserProfile"
+	UserGrpcService_CreateUser_FullMethodName                  = "/UserGrpcService/CreateUser"
 	UserGrpcService_CredentialSearch_FullMethodName            = "/UserGrpcService/CredentialSearch"
 	UserGrpcService_FindOneUserProfileToRefresh_FullMethodName = "/UserGrpcService/FindOneUserProfileToRefresh"
 )
@@ -31,6 +33,8 @@ const (
 //
 // Methods
 type UserGrpcServiceClient interface {
+	GetUserProfile(ctx context.Context, in *GetUserProfileReq, opts ...grpc.CallOption) (*UserProfile, error)
+	CreateUser(ctx context.Context, in *CreateUserReq, opts ...grpc.CallOption) (*UserProfile, error)
 	CredentialSearch(ctx context.Context, in *CredentialSearchReq, opts ...grpc.CallOption) (*UserProfile, error)
 	FindOneUserProfileToRefresh(ctx context.Context, in *FindOneUserProfileToRefreshReq, opts ...grpc.CallOption) (*UserProfile, error)
 }
@@ -41,6 +45,26 @@ type userGrpcServiceClient struct {
 
 func NewUserGrpcServiceClient(cc grpc.ClientConnInterface) UserGrpcServiceClient {
 	return &userGrpcServiceClient{cc}
+}
+
+func (c *userGrpcServiceClient) GetUserProfile(ctx context.Context, in *GetUserProfileReq, opts ...grpc.CallOption) (*UserProfile, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UserProfile)
+	err := c.cc.Invoke(ctx, UserGrpcService_GetUserProfile_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userGrpcServiceClient) CreateUser(ctx context.Context, in *CreateUserReq, opts ...grpc.CallOption) (*UserProfile, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UserProfile)
+	err := c.cc.Invoke(ctx, UserGrpcService_CreateUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *userGrpcServiceClient) CredentialSearch(ctx context.Context, in *CredentialSearchReq, opts ...grpc.CallOption) (*UserProfile, error) {
@@ -69,6 +93,8 @@ func (c *userGrpcServiceClient) FindOneUserProfileToRefresh(ctx context.Context,
 //
 // Methods
 type UserGrpcServiceServer interface {
+	GetUserProfile(context.Context, *GetUserProfileReq) (*UserProfile, error)
+	CreateUser(context.Context, *CreateUserReq) (*UserProfile, error)
 	CredentialSearch(context.Context, *CredentialSearchReq) (*UserProfile, error)
 	FindOneUserProfileToRefresh(context.Context, *FindOneUserProfileToRefreshReq) (*UserProfile, error)
 	mustEmbedUnimplementedUserGrpcServiceServer()
@@ -81,6 +107,12 @@ type UserGrpcServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedUserGrpcServiceServer struct{}
 
+func (UnimplementedUserGrpcServiceServer) GetUserProfile(context.Context, *GetUserProfileReq) (*UserProfile, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserProfile not implemented")
+}
+func (UnimplementedUserGrpcServiceServer) CreateUser(context.Context, *CreateUserReq) (*UserProfile, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateUser not implemented")
+}
 func (UnimplementedUserGrpcServiceServer) CredentialSearch(context.Context, *CredentialSearchReq) (*UserProfile, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CredentialSearch not implemented")
 }
@@ -106,6 +138,42 @@ func RegisterUserGrpcServiceServer(s grpc.ServiceRegistrar, srv UserGrpcServiceS
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&UserGrpcService_ServiceDesc, srv)
+}
+
+func _UserGrpcService_GetUserProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserProfileReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserGrpcServiceServer).GetUserProfile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserGrpcService_GetUserProfile_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserGrpcServiceServer).GetUserProfile(ctx, req.(*GetUserProfileReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserGrpcService_CreateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateUserReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserGrpcServiceServer).CreateUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserGrpcService_CreateUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserGrpcServiceServer).CreateUser(ctx, req.(*CreateUserReq))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _UserGrpcService_CredentialSearch_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -151,6 +219,14 @@ var UserGrpcService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "UserGrpcService",
 	HandlerType: (*UserGrpcServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetUserProfile",
+			Handler:    _UserGrpcService_GetUserProfile_Handler,
+		},
+		{
+			MethodName: "CreateUser",
+			Handler:    _UserGrpcService_CreateUser_Handler,
+		},
 		{
 			MethodName: "CredentialSearch",
 			Handler:    _UserGrpcService_CredentialSearch_Handler,
