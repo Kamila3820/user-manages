@@ -3,14 +3,14 @@ A modern manage user backend service built in Go with high-performance APIs usin
 
 ## 📁 Project Structure
 
-├── config/         # Configuration files (e.g., MongoDB setup)
-├── env/            # .env and environment management
-├── modules/        # Modules for business logic (user module, etc.)
-├── pkg/            # Shared utilities and core packages
-├── server/         # HTTP server and route registration
-├── test/           # Test files and sample data
-├── go.mod / sum    # Go modules
-└── README.md       # Project documentation
+├── config/         # Configuration files (e.g., MongoDB setup)<br/> 
+├── env/            # .env and environment management<br/> 
+├── modules/        # Modules for business logic (user module, etc.)<br/> 
+├── pkg/            # Shared utilities and core packages<br/> 
+├── server/         # HTTP server and route registration<br/> 
+├── test/           # Test files and sample data<br/> 
+├── go.mod / sum    # Go modules<br/> 
+└── README.md       # Project documentation<br/> 
 
 ## 🚀 Features
 - List all users
@@ -31,13 +31,13 @@ A modern manage user backend service built in Go with high-performance APIs usin
 
 ## 📦 Packages
 - go get github.com/labstack/echo/v4<br/> 
-go get github.com/labstack/echo/v4/middleware
-go get github.com/go-playground/validator/v10
-go get github.com/joho/godotenv
-go get go.mongodb.org/mongo-driver/mongo
-go get github.com/golang-jwt/jwt/v5
-go get github.com/stretchr/testify
-go get github.com/IBM/sarama
+go get github.com/labstack/echo/v4/middleware<br/> 
+go get github.com/go-playground/validator/v10<br/> 
+go get github.com/joho/godotenv<br/> 
+go get go.mongodb.org/mongo-driver/mongo<br/> 
+go get github.com/golang-jwt/jwt/v5<br/> 
+go get github.com/stretchr/testify<br/> 
+go get github.com/IBM/sarama<br/> 
 
 ## 📃 Start App in Terminal
 ```bash
