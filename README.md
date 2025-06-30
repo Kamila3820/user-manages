@@ -30,7 +30,7 @@ A modern manage user backend service built in Go with high-performance APIs usin
 - ockerized MongoDB support
 
 ## 📦 Packages
-go get github.com/labstack/echo/v4
+- go get github.com/labstack/echo/v4__
 go get github.com/labstack/echo/v4/middleware
 go get github.com/go-playground/validator/v10
 go get github.com/joho/godotenv
