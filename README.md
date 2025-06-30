@@ -12,7 +12,7 @@ A modern manage user backend service built in Go with high-performance APIs usin
 ├── go.mod / sum    # Go modules
 └── README.md       # Project documentation
 
-🚀 Features
+## 🚀 Features
 - List all users
 
 - Register new users
@@ -29,7 +29,7 @@ A modern manage user backend service built in Go with high-performance APIs usin
 
 - ockerized MongoDB support
 
-📦 Packages
+## 📦 Packages
 go get github.com/labstack/echo/v4
 go get github.com/labstack/echo/v4/middleware
 go get github.com/go-playground/validator/v10
@@ -39,42 +39,53 @@ go get github.com/golang-jwt/jwt/v5
 go get github.com/stretchr/testify
 go get github.com/IBM/sarama
 
-📃 Start App in Terminal
-\`\`\`bash
+## 📃 Start App in Terminal
+```bash
 go run main.go ./env/dev/.env.auth
 go run main.go ./env/dev/.env.user
-\`\`\`
+```
 
-🍃 MongoDb
+## 🍃 MongoDb
 Start Docker Compose
 
+```bash
 docker compose -f docker-compose.db.yml up -d
+```
 
 Enter into a db container
 
+```bash
 docker exec -it <db_name> bash
+```
 
-Migration
+## Migration
 
 dev
 
+```bash
 go run ./pkg/database/script/migration.go ./env/dev/.env.user && \
 go run ./pkg/database/script/migration.go ./env/dev/.env.auth && \
+```
 
-Generate a Proto File Command
+## Generate a Proto File Command
 
 player
 
+```bash
 protoc --go_out=. --go_opt=paths=source_relative \
     --go-grpc_out=. --go-grpc_opt=paths=source_relative \
     modules/user/userPb/userPb.proto
+```
+
 auth
 
+```bash
 protoc --go_out=. --go_opt=paths=source_relative \
     --go-grpc_out=. --go-grpc_opt=paths=source_relative \
     modules/auth/authPb/authPb.proto
+```
 
-🧪 Testing
+## 🧪 Testing
 Written using Go’s testing package
 
 MongoDB interactions mocked via interfaces
