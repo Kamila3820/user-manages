@@ -1,0 +1,28 @@
+// Version
+syntax = "proto3";
+
+// Package name
+option go_package = "user-manages/modules/user/userPb/userPb.proto";
+
+// Structures
+message UserProfile {
+    string id = 1;
+    string email = 2;
+    string name = 3;
+    string created_at = 4;
+}
+
+message CredentialSearchReq {
+    string email = 1;
+    string password = 2;
+}
+
+message FindOneUserProfileToRefreshReq {
+    string userId = 1;
+}
+
+// Methods
+service UserGrpcService {
+    rpc CredentialSearch(CredentialSearchReq) returns (UserProfile);
+    rpc FindOneUserProfileToRefresh (FindOneUserProfileToRefreshReq) returns (UserProfile);
+}

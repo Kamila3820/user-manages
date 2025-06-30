@@ -1,0 +1,19 @@
+// Version
+syntax = "proto3";
+
+// Package name
+option go_package = "user-manages/modules/auth/authPb/authPb.proto";
+
+// Structures
+message AccessTokenSearchReq {
+    string accessToken = 1;
+}
+
+message AccessTokenSearchRes {
+    bool isValid = 1;
+}
+
+// Methods
+service AuthGrpcService {
+    rpc AccessTokenSearch(AccessTokenSearchReq) returns (AccessTokenSearchRes);
+}

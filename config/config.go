@@ -36,8 +36,8 @@ type (
 	}
 
 	Grpc struct {
-		AuthUrl   string
-		PlayerUrl string
+		AuthUrl string
+		UserUrl string
 	}
 )
 
@@ -75,8 +75,8 @@ func LoadConfig(path string) Config {
 			}(),
 		},
 		Grpc: Grpc{
-			AuthUrl:   os.Getenv("GRPC_AUTH_URL"),
-			PlayerUrl: os.Getenv("GRPC_PLAYER_URL"),
+			AuthUrl: os.Getenv("GRPC_AUTH_URL"),
+			UserUrl: os.Getenv("GRPC_USER_URL"),
 		},
 	}
 }
