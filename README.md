@@ -40,8 +40,10 @@ go get github.com/stretchr/testify
 go get github.com/IBM/sarama
 
 📃 Start App in Terminal
+\`\`\`bash
 go run main.go ./env/dev/.env.auth
 go run main.go ./env/dev/.env.user
+\`\`\`
 
 🍃 MongoDb
 Start Docker Compose
