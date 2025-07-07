@@ -22,7 +22,8 @@ func (m *AuthRepositoryMock) DeleteOneUserCredential(pctx context.Context, crede
 
 // FindOneUserCredential implements AuthRepositoryService.
 func (m *AuthRepositoryMock) FindOneUserCredential(pctx context.Context, credentialId string) (*auth.Credential, error) {
-	panic("unimplemented")
+	args := m.Called(pctx, credentialId)
+	return args.Get(0).(*auth.Credential), args.Error(1)
 }
 
 // FindOneUserProfileToRefresh implements AuthRepositoryService.
@@ -32,7 +33,8 @@ func (m *AuthRepositoryMock) FindOneUserProfileToRefresh(pctx context.Context, g
 
 // InsertOneUserCredential implements AuthRepositoryService.
 func (m *AuthRepositoryMock) InsertOneUserCredential(pctx context.Context, req *auth.Credential) (primitive.ObjectID, error) {
-	panic("unimplemented")
+	args := m.Called(pctx, req)
+	return args.Get(0).(primitive.ObjectID), args.Error(1)
 }
 
 // UpdateOneUserCredential implements AuthRepositoryService.
@@ -55,32 +57,6 @@ func (m *AuthRepositoryMock) RefreshToken(cfg *config.Config, claims *jwtauth.Cl
 	return args.String(0)
 }
 
-func (m *AuthRepositoryMock) InsertOnePlayerCredential(pctx context.Context, req *auth.Credential) (primitive.ObjectID, error) {
-	args := m.Called(pctx, req)
-	return args.Get(0).(primitive.ObjectID), args.Error(1)
-}
-
-func (m *AuthRepositoryMock) FindOnePlayerCredential(pctx context.Context, credentialId string) (*auth.Credential, error) {
-	args := m.Called(pctx, credentialId)
-	return args.Get(0).(*auth.Credential), args.Error(1)
-}
-
-func (m *AuthRepositoryMock) FindOnePlayerProfileToRefresh(pctx context.Context, grpcUrl string, req *userPb.FindOneUserProfileToRefreshReq) (*userPb.UserProfile, error) {
-	return nil, nil
-}
-
-func (m *AuthRepositoryMock) UpdateOnePlayerCredential(pctx context.Context, credentialId string, req *auth.UpdateRefreshTokenReq) error {
-	return nil
-}
-
-func (m *AuthRepositoryMock) DeleteOnePlayerCredential(pctx context.Context, credentialId string) (int64, error) {
-	return 0, nil
-}
-
 func (m *AuthRepositoryMock) FindOneAccessToken(pctx context.Context, accessToken string) (*auth.Credential, error) {
 	return nil, nil
-}
-
-func (m *AuthRepositoryMock) RolesCount(pctx context.Context) (int64, error) {
-	return 0, nil
 }
