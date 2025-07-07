@@ -70,10 +70,10 @@ func (h *userHttpHandler) ListUsers(c echo.Context) error {
 
 	users, err := h.userUsecase.ListAllUsers(ctx)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "failed to list users"})
+		return response.ErrResponse(c, http.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, users)
+	return response.SuccessResponse(c, http.StatusOK, users)
 }
 
 func (h *userHttpHandler) UpdateUser(c echo.Context) error {
@@ -81,14 +81,14 @@ func (h *userHttpHandler) UpdateUser(c echo.Context) error {
 
 	req := new(user.UpdateUserReq)
 	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, echo.Map{"error": "invalid request"})
+		response.ErrResponse(c, http.StatusBadRequest, err.Error())
 	}
 
 	if err := h.userUsecase.UpdateUser(c.Request().Context(), userId, req); err != nil {
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+		return response.ErrResponse(c, http.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, echo.Map{"message": "user updated successfully"})
+	return response.SuccessResponse(c, http.StatusOK, echo.Map{"message": "user updated successfully"})
 }
 
 func (h *userHttpHandler) DeleteUser(c echo.Context) error {
@@ -97,10 +97,10 @@ func (h *userHttpHandler) DeleteUser(c echo.Context) error {
 	err := h.userUsecase.DeleteUser(c.Request().Context(), userId)
 	if err != nil {
 		if err.Error() == "user not found" {
-			return c.JSON(http.StatusNotFound, echo.Map{"error": "user not found"})
+			return response.ErrResponse(c, http.StatusNotFound, err.Error())
 		}
-		return c.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
+		return response.ErrResponse(c, http.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, echo.Map{"message": "user deleted successfully"})
+	return response.SuccessResponse(c, http.StatusOK, echo.Map{"message": "user deleted successfully"})
 }
