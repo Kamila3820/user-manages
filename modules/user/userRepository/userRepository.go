@@ -24,6 +24,7 @@ type (
 		FindAllUsers(pctx context.Context) ([]user.User, error)
 		UpdateUser(ctx context.Context, userId string, updateData map[string]interface{}) error
 		DeleteUser(ctx context.Context, userId string) error
+		LogUserCount(ctx context.Context)
 	}
 
 	userRepository struct {
@@ -195,4 +196,29 @@ func (r *userRepository) DeleteUser(ctx context.Context, userId string) error {
 	}
 
 	return nil
+}
+
+func (r *userRepository) LogUserCount(ctx context.Context) {
+	ticker := time.NewTicker(10 * time.Second)
+	defer ticker.Stop()
+
+	for {
+		select {
+		case <-ticker.C:
+			// Query the database to count users
+			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+			defer cancel()
+
+			db := r.userDbConn(ctx)
+			col := db.Collection("users")
+
+			count, err := col.CountDocuments(ctx, bson.M{})
+			if err != nil {
+				log.Printf("Error counting users: %s", err.Error())
+				continue
+			}
+
+			log.Printf("Number of users in the database: %d", count)
+		}
+	}
 }
