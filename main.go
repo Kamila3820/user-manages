@@ -25,9 +25,10 @@ func main() {
 	db := database.DbConn(ctx, &cfg)
 	defer db.Disconnect(ctx)
 
-	userRepo := userRepo.NewUserRepository(db)
-
-	go userRepo.LogUserCount(ctx)
+	if cfg.App.Name == "user" {
+		userRepo := userRepo.NewUserRepository(db)
+		go userRepo.LogUserCount(ctx)
+	}
 
 	server.Start(ctx, &cfg, db)
 }

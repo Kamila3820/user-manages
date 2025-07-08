@@ -205,7 +205,6 @@ func (r *userRepository) LogUserCount(ctx context.Context) {
 	for {
 		select {
 		case <-ticker.C:
-			// Query the database to count users
 			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 			defer cancel()
 
